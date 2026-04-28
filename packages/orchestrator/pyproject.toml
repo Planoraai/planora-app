@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-orchestrator"
+version = "0.1.0"
+description = "Hub-and-spoke orchestrator: trip-request parser, LangGraph state graph, agent base contract."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "langgraph>=0.2.34",
+    "travel-planner-domain-contracts",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

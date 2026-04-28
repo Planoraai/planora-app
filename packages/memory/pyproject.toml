@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-memory"
+version = "0.1.0"
+description = "In-memory run-state store, TTL/LRU planner-result cache, and user-preference profile store with prompt augmentation. Wraps an underlying planner via MemoryAwarePlanner."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "travel-planner-domain-contracts",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

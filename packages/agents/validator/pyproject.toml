@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-agent-validator"
+version = "0.1.0"
+description = "Itinerary validator agent: applies hard rules (budget/geography/time) and emits a typed RevisionRequest for the repair loop."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "travel-planner-domain-contracts",
+    "travel-planner-orchestrator",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["agents*"]
+namespaces = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

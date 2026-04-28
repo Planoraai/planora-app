@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-reliability"
+version = "0.1.0"
+description = "Production hardening: ModelTierPolicy, with_retry, CircuitBreaker, HardenedPlannerService (latency budget + result-shape validation + graceful degradation)."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "travel-planner-domain-contracts",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-agent-destination"
+version = "0.1.0"
+description = "Destination research agent: candidate cities, neighborhoods, and activity ideas grounded in tool-augmented retrieval."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "travel-planner-domain-contracts",
+    "travel-planner-orchestrator",
+    "travel-planner-tools",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["agents*"]
+namespaces = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

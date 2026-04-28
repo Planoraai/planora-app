@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-agent-synthesis"
+version = "0.1.0"
+description = "Itinerary synthesis agent: merges recommendations + logistics + budget into a coherent day-by-day Itinerary contract."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+    "travel-planner-domain-contracts",
+    "travel-planner-orchestrator",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["agents*"]
+namespaces = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-planner-tools"
+version = "0.1.0"
+description = "Typed tool layer (BaseTool, ToolRegistry, web/maps/hotel/transit/fx/price/vector tools) with retries, caching, real-timeout enforcement, and typed error classes."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.9",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
