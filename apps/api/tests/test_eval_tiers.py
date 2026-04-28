@@ -118,10 +118,7 @@ def test_tier1_constraint_fidelity_eval() -> None:
 
 
 def test_tier1_consistency_determinism_eval() -> None:
-    prompt = (
-        "Plan a 5-day Japan trip for Tokyo and Kyoto under 3000 USD with "
-        "food and temples."
-    )
+    prompt = "Plan a 5-day Japan trip for Tokyo and Kyoto under 3000 USD with food and temples."
     with TestClient(app) as client:
         runs = [_plan(client, prompt, user_id=f"determinism-{idx}") for idx in range(3)]
 
@@ -184,7 +181,9 @@ def test_tier1_repair_loop_safety_eval() -> None:
 
 def test_tier2_tool_failure_degradation_eval(monkeypatch: pytest.MonkeyPatch) -> None:
     class _FailingHardening:
-        def run(self, *, prompt: str, planner_kwargs: dict[str, object]) -> tuple[None, dict[str, object]]:
+        def run(
+            self, *, prompt: str, planner_kwargs: dict[str, object]
+        ) -> tuple[None, dict[str, object]]:
             return None, {
                 "ok": False,
                 "error_type": "tool_upstream_error",
@@ -286,12 +285,8 @@ def test_tier3_semantic_similarity_stability_eval() -> None:
 
 
 def test_tier3_ab_minimal_change_sensitivity_eval() -> None:
-    prompt_a = (
-        "Plan a 5-day Japan trip to Tokyo and Kyoto under 3000 USD with quiet neighborhoods."
-    )
-    prompt_b = (
-        "Plan a 5-day Japan trip to Tokyo and Kyoto under 3000 USD with calm neighborhoods."
-    )
+    prompt_a = "Plan a 5-day Japan trip to Tokyo and Kyoto under 3000 USD with quiet neighborhoods."
+    prompt_b = "Plan a 5-day Japan trip to Tokyo and Kyoto under 3000 USD with calm neighborhoods."
     with TestClient(app) as client:
         run_a = _plan(client, prompt_a, user_id="ab-a")
         run_b = _plan(client, prompt_b, user_id="ab-b")

@@ -59,8 +59,7 @@ def test_parser_paris_request() -> None:
 
 def test_parser_handles_non_predefined_country_and_cities() -> None:
     request = (
-        "Plan a 6-day trip to Spain. Barcelona + Madrid. "
-        "2500 USD budget. Love food and museums."
+        "Plan a 6-day trip to Spain. Barcelona + Madrid. 2500 USD budget. Love food and museums."
     )
     trip = parse_trip_request(request)
     assert trip.destination_country == "Spain"
