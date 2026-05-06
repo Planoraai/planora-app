@@ -2,7 +2,6 @@ export type AuthSession = {
   email: string;
 };
 
-const AUTH_KEY = "planora.auth.session";
 const USAGE_KEY = "planora.usage.daily";
 const GUEST_DAILY_LIMIT = 2;
 const AUTH_DAILY_LIMIT = 5;
@@ -46,27 +45,15 @@ function writeUsage(record: UsageRecord): void {
 }
 
 export function getAuthSession(): AuthSession | null {
-  if (!isBrowser()) return null;
-  try {
-    const raw = window.localStorage.getItem(AUTH_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as AuthSession;
-    if (!parsed.email) return null;
-    return parsed;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 export function setAuthSession(email: string): void {
-  if (!isBrowser()) return;
-  const session: AuthSession = { email: email.trim().toLowerCase() };
-  window.localStorage.setItem(AUTH_KEY, JSON.stringify(session));
+  void email;
 }
 
 export function clearAuthSession(): void {
-  if (!isBrowser()) return;
-  window.localStorage.removeItem(AUTH_KEY);
+  // Supabase session is handled by auth client; no local auth record to clear.
 }
 
 export function getRemainingPlans(session: AuthSession | null): number {

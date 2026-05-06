@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { setAuthSession } from "@/lib/usage";
+import { supabase } from "@/lib/supabase";
 
 type AuthTemplateProps = {
   mode: "sign-in" | "sign-up";
@@ -20,16 +20,44 @@ export function AuthTemplate(props: AuthTemplateProps) {
   const isSignIn = props.mode === "sign-in";
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!email.trim()) {
       setError("Email is required.");
       return;
     }
-    setAuthSession(email);
-    router.push(props.nextPath || "/");
+    if (!password.trim()) {
+      setError("Password is required.");
+      return;
+    }
+
+    setError(null);
+    setIsSubmitting(true);
+    try {
+      if (isSignIn) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: email.trim().toLowerCase(),
+          password,
+        });
+        if (signInError) throw signInError;
+      } else {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: email.trim().toLowerCase(),
+          password,
+        });
+        if (signUpError) throw signUpError;
+      }
+      router.push(props.nextPath || "/");
+    } catch (submitError) {
+      const message = submitError instanceof Error ? submitError.message : "Authentication failed.";
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -133,7 +161,8 @@ export function AuthTemplate(props: AuthTemplateProps) {
                   </div>
                   <input
                     type="password"
-                    defaultValue="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
                     className="h-11 w-full rounded-xl border border-[#dcdcdc] px-4 text-base text-[#6d7278] outline-none"
                   />
                 </div>
@@ -150,9 +179,10 @@ export function AuthTemplate(props: AuthTemplateProps) {
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   className="mt-1 h-11 w-full rounded-xl bg-[#02173d] text-lg font-semibold text-white shadow-[0_7px_16px_rgba(2,23,61,0.2)]"
                 >
-                  {isSignIn ? "Sign In  ->" : "Create Account"}
+                  {isSubmitting ? "Please wait..." : isSignIn ? "Sign In  ->" : "Create Account"}
                 </button>
                 {error ? <p className="text-sm text-red-600">{error}</p> : null}
               </form>

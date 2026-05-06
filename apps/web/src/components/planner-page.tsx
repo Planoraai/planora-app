@@ -4,10 +4,9 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { planTrip } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import {
-  clearAuthSession,
   consumePlan,
-  getAuthSession,
   getLimitMessage,
   getRemainingPlans,
   type AuthSession,
@@ -25,8 +24,8 @@ export function PlannerPage() {
   const [state, setState] = useState<PlanningState>("idle");
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<TripPlanResponse | null>(null);
-  const [session, setSession] = useState<AuthSession | null>(() => getAuthSession());
-  const [remainingPlans, setRemainingPlans] = useState<number>(() => getRemainingPlans(getAuthSession()));
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [remainingPlans, setRemainingPlans] = useState<number>(() => getRemainingPlans(null));
 
   const badgeText = useMemo(() => {
     if (state === "loading") return "Planning in progress";
@@ -37,13 +36,32 @@ export function PlannerPage() {
   }, [state]);
 
   useEffect(() => {
-    const currentSession = getAuthSession();
-    setSession(currentSession);
-    setRemainingPlans(getRemainingPlans(currentSession));
+    let mounted = true;
+    async function loadSession() {
+      const { data } = await supabase.auth.getSession();
+      if (!mounted) return;
+      const currentSession = data.session?.user.email ? { email: data.session.user.email } : null;
+      setSession(currentSession);
+      setRemainingPlans(getRemainingPlans(currentSession));
+    }
+    void loadSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, authSession) => {
+      const currentSession = authSession?.user.email ? { email: authSession.user.email } : null;
+      setSession(currentSession);
+      setRemainingPlans(getRemainingPlans(currentSession));
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
-  function onSignOut() {
-    clearAuthSession();
+  async function onSignOut() {
+    await supabase.auth.signOut();
     setSession(null);
     setRemainingPlans(getRemainingPlans(null));
     setError(null);
@@ -53,7 +71,8 @@ export function PlannerPage() {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const currentSession = getAuthSession();
+    const { data } = await supabase.auth.getSession();
+    const currentSession = data.session?.user.email ? { email: data.session.user.email } : null;
     setSession(currentSession);
     const remaining = getRemainingPlans(currentSession);
     setRemainingPlans(remaining);
