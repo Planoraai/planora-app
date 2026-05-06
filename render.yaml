@@ -11,6 +11,8 @@ services:
     envVars:
       - key: APP_ENV
         value: staging
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: LOG_LEVEL
         value: INFO
       - key: LOG_JSON
@@ -32,6 +34,8 @@ services:
     envVars:
       - key: APP_ENV
         value: production
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: LOG_LEVEL
         value: INFO
       - key: LOG_JSON
