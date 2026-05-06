@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: planora-api-staging
+    runtime: python
+    rootDir: apps/api
+    plan: free
+    autoDeploy: true
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_ENV
+        value: staging
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_JSON
+        value: true
+      - key: MOCK_MODE
+        value: true
+      - key: API_CORS_ORIGINS
+        sync: false
+
+  - type: web
+    name: planora-api-prod
+    runtime: python
+    rootDir: apps/api
+    plan: free
+    autoDeploy: false
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_JSON
+        value: true
+      - key: MOCK_MODE
+        value: true
+      - key: API_CORS_ORIGINS
+        sync: false

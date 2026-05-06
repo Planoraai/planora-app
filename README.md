@@ -30,6 +30,7 @@ This repository follows a **domain-driven monorepo layout**:
 | [`docs/problemStatement.md`](docs/problemStatement.md) | Original problem statement |
 | [`docs/architecture.md`](docs/architecture.md) | Reference architecture |
 | [`docs/implementationPlan.md`](docs/implementationPlan.md) | Phase-wise delivery plan |
+| [`docs/deployment-foundation.md`](docs/deployment-foundation.md) | Staging-first deployment runbook |
 | [`docs/projectFileMap.md`](docs/projectFileMap.md) | Interview-friendly file map |
 | [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Version history |
 
