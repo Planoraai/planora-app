@@ -90,16 +90,12 @@ export function AuthTemplate(props: AuthTemplateProps) {
               </nav>
             ) : null}
           </div>
-          {!isSignIn ? (
-            <Link href="/sign-in" className="text-sm font-medium text-[#101010] sm:text-sm">
-              Sign In
-            </Link>
-          ) : <span />}
+          <span />
         </header>
 
         <section className="grid flex-1 grid-cols-1 lg:grid-cols-2">
           <aside
-            className="relative hidden min-h-[420px] overflow-hidden lg:block"
+            className={`relative hidden overflow-hidden lg:block ${isSignIn ? "min-h-[420px]" : "min-h-[390px]"}`}
             style={{
               backgroundImage: `linear-gradient(rgba(7, 15, 35, 0.38), rgba(7, 15, 35, 0.48)), url(${
                 isSignIn ? signInHero : signUpHero
@@ -117,9 +113,9 @@ export function AuthTemplate(props: AuthTemplateProps) {
                 </p>
               </div>
             ) : (
-              <div className="absolute bottom-12 left-10 right-10 text-white">
-                <h2 className="max-w-[520px] text-[34px] font-semibold leading-[1.02] xl:text-[42px]">Join the future of travel.</h2>
-                <p className="mt-4 max-w-[560px] text-lg leading-snug text-white/90 xl:text-xl">
+              <div className="absolute bottom-10 left-8 right-8 text-white">
+                <h2 className="max-w-[480px] text-[28px] font-semibold leading-[1.04] xl:text-[34px]">Join the future of travel.</h2>
+                <p className="mt-3 max-w-[520px] text-base leading-snug text-white/90 xl:text-lg">
                   Experience hyper-personalized itineraries powered by AI agents that understand your unique travel
                   soul.
                 </p>
@@ -127,10 +123,12 @@ export function AuthTemplate(props: AuthTemplateProps) {
             )}
           </aside>
 
-          <div className="flex items-center justify-center px-5 py-7 sm:px-7 lg:px-9">
-            <div className="w-full max-w-[460px]">
-              <h1 className="text-[44px] font-semibold leading-tight">{isSignIn ? "Welcome back" : "Create your account"}</h1>
-              <p className="mt-1.5 text-[18px] text-[#606d7a]">
+          <div className="flex items-center justify-center px-5 py-6 sm:px-7 lg:px-9">
+            <div className={`w-full ${isSignIn ? "max-w-[460px]" : "max-w-[430px]"}`}>
+              <h1 className={`${isSignIn ? "text-[44px]" : "text-[36px]"} font-semibold leading-tight`}>
+                {isSignIn ? "Welcome back" : "Create your account"}
+              </h1>
+              <p className={`mt-1.5 text-[#606d7a] ${isSignIn ? "text-[18px]" : "text-base"}`}>
                 {isSignIn
                   ? "Enter your details to access your AI-powered itineraries."
                   : "Start your journey with Planora today."}
