@@ -8,6 +8,8 @@ from typing import Any
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sentry_sdk
+from sentry_sdk.integrations.fastapi import FastApiIntegration
 
 from app_platform import __version__
 from app_platform.application_settings import settings
@@ -32,6 +34,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
 def create_app() -> FastAPI:
     configure_logging()
+    _configure_sentry()
 
     app = FastAPI(
         title=settings.app_name,
@@ -65,3 +68,17 @@ def create_app() -> FastAPI:
         }
 
     return app
+
+
+def _configure_sentry() -> None:
+    if not settings.sentry_dsn:
+        return
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn.get_secret_value(),
+        environment=settings.app_env,
+        release=settings.app_version,
+        traces_sample_rate=settings.sentry_traces_sample_rate,
+        profiles_sample_rate=settings.sentry_profiles_sample_rate,
+        integrations=[FastApiIntegration()],
+        send_default_pii=False,
+    )

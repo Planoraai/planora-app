@@ -1,0 +1,38 @@
+name: Weekly Release Reminder
+
+on:
+  schedule:
+    - cron: "0 6 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  open-release-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create weekly release reminder issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Weekly release train: develop -> main (${new Date().toISOString().slice(0,10)})`;
+            const body = [
+              "Run weekly release checklist:",
+              "",
+              "- [ ] Review changes merged into `develop`",
+              "- [ ] Run staging smoke checks",
+              "- [ ] Open PR `develop -> main`",
+              "- [ ] Verify production deployment",
+              "",
+              "Reference docs:",
+              "- docs/release-cadence.md",
+              "- docs/release-checklist.md",
+            ].join("\n");
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+            });

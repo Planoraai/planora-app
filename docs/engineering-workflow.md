@@ -25,6 +25,7 @@ Examples:
 - Keep PRs small and single-purpose
 - Include test evidence in every PR
 - If a change impacts deploy/runtime, include rollback notes
+- Follow weekly promotion from `develop` to `main` (see `docs/release-cadence.md`)
 
 ## PR checklist (minimum)
 

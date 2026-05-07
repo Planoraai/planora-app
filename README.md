@@ -33,6 +33,7 @@ This repository follows a **domain-driven monorepo layout**:
 | [`docs/deployment-foundation.md`](docs/deployment-foundation.md) | Staging-first deployment runbook |
 | [`docs/supabase-usage-setup.md`](docs/supabase-usage-setup.md) | SQL setup for persisted daily usage limits |
 | [`docs/engineering-workflow.md`](docs/engineering-workflow.md) | PR-first branch and release workflow |
+| [`docs/release-cadence.md`](docs/release-cadence.md) | Weekly develop-to-main release train |
 | [`docs/release-checklist.md`](docs/release-checklist.md) | Production release checklist |
 | [`docs/projectFileMap.md`](docs/projectFileMap.md) | Interview-friendly file map |
 | [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Version history |

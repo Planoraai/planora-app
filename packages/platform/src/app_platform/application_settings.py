@@ -63,6 +63,9 @@ class Settings(BaseSettings):
     langfuse_public_key: SecretStr | None = None
     langfuse_secret_key: SecretStr | None = None
     langfuse_host: str = "https://cloud.langfuse.com"
+    sentry_dsn: SecretStr | None = None
+    sentry_traces_sample_rate: float = Field(default=0.0, ge=0.0, le=1.0)
+    sentry_profiles_sample_rate: float = Field(default=0.0, ge=0.0, le=1.0)
 
     api_host: str = "0.0.0.0"
     api_port: int = Field(default=8000, ge=1, le=65535)
@@ -101,6 +104,7 @@ class Settings(BaseSettings):
         "langsmith_api_key",
         "langfuse_public_key",
         "langfuse_secret_key",
+        "sentry_dsn",
         mode="before",
     )
     @classmethod
