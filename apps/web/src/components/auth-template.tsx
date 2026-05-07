@@ -21,7 +21,9 @@ export function AuthTemplate(props: AuthTemplateProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -34,8 +36,13 @@ export function AuthTemplate(props: AuthTemplateProps) {
       setError("Password is required.");
       return;
     }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
 
     setError(null);
+    setNotice(null);
     setIsSubmitting(true);
     try {
       if (isSignIn) {
@@ -45,7 +52,7 @@ export function AuthTemplate(props: AuthTemplateProps) {
         });
         if (signInError) throw signInError;
       } else {
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { data, error: signUpError } = await supabase.auth.signUp({
           email: email.trim().toLowerCase(),
           password,
           options: {
@@ -54,6 +61,10 @@ export function AuthTemplate(props: AuthTemplateProps) {
           },
         });
         if (signUpError) throw signUpError;
+        if (!data.session) {
+          setNotice("Account created. Check your email to verify your account, then sign in.");
+          return;
+        }
       }
       router.push(props.nextPath || "/");
     } catch (submitError) {
@@ -157,18 +168,33 @@ export function AuthTemplate(props: AuthTemplateProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between">
                     <label className="text-[17px] tracking-wide text-[#2a2a2a]">{isSignIn ? "PASSWORD" : "Password"}</label>
-                    {isSignIn ? (
-                      <a href="#" className="text-sm text-[#946e52]">
-                        Forgot password?
-                      </a>
-                    ) : null}
+                    <div className="flex items-center gap-3">
+                      {isSignIn ? (
+                        <a href="#" className="text-sm text-[#946e52]">
+                          Forgot password?
+                        </a>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="text-sm text-[#475467] hover:underline"
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
                   </div>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
+                    autoComplete={isSignIn ? "current-password" : "new-password"}
                     className="h-11 w-full rounded-xl border border-[#dcdcdc] px-4 text-base text-[#6d7278] outline-none"
                   />
+                  {!isSignIn ? (
+                    <p className="mt-1 text-xs text-[#667085]">
+                      Use at least 8 characters. Strong passwords include upper/lowercase, numbers, and symbols.
+                    </p>
+                  ) : null}
                 </div>
 
                 {!isSignIn ? (
@@ -189,6 +215,7 @@ export function AuthTemplate(props: AuthTemplateProps) {
                   {isSubmitting ? "Please wait..." : isSignIn ? "Sign In  ->" : "Create Account"}
                 </button>
                 {error ? <p className="text-sm text-red-600">{error}</p> : null}
+                {notice ? <p className="text-sm text-green-700">{notice}</p> : null}
               </form>
 
               <p className="mt-7 text-center text-base text-[#525b66]">
