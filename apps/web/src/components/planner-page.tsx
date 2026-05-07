@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { planTrip } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import {
-  consumePlan,
+  consumePlanAsync,
   getLimitMessage,
   getRemainingPlans,
+  getRemainingPlansAsync,
   type AuthSession,
 } from "@/lib/usage";
 import type { TripPlanResponse } from "@/types/planner";
@@ -40,18 +41,24 @@ export function PlannerPage() {
     async function loadSession() {
       const { data } = await supabase.auth.getSession();
       if (!mounted) return;
-      const currentSession = data.session?.user.email ? { email: data.session.user.email } : null;
+      const currentSession = data.session?.user.email
+        ? { email: data.session.user.email, userId: data.session.user.id }
+        : null;
       setSession(currentSession);
-      setRemainingPlans(getRemainingPlans(currentSession));
+      setRemainingPlans(await getRemainingPlansAsync(currentSession));
     }
     void loadSession();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, authSession) => {
-      const currentSession = authSession?.user.email ? { email: authSession.user.email } : null;
+      const currentSession = authSession?.user.email
+        ? { email: authSession.user.email, userId: authSession.user.id }
+        : null;
       setSession(currentSession);
-      setRemainingPlans(getRemainingPlans(currentSession));
+      void (async () => {
+        setRemainingPlans(await getRemainingPlansAsync(currentSession));
+      })();
     });
 
     return () => {
@@ -72,9 +79,11 @@ export function PlannerPage() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const { data } = await supabase.auth.getSession();
-    const currentSession = data.session?.user.email ? { email: data.session.user.email } : null;
+    const currentSession = data.session?.user.email
+      ? { email: data.session.user.email, userId: data.session.user.id }
+      : null;
     setSession(currentSession);
-    const remaining = getRemainingPlans(currentSession);
+    const remaining = await getRemainingPlansAsync(currentSession);
     setRemainingPlans(remaining);
     if (remaining <= 0) {
       if (!currentSession) {
@@ -93,7 +102,7 @@ export function PlannerPage() {
       const { data } = await planTrip({ prompt });
       setResponse(data);
       setState(data.approved ? "success" : "validation_failure");
-      setRemainingPlans(consumePlan(currentSession));
+      setRemainingPlans(await consumePlanAsync(currentSession));
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unexpected request failure.";
       setError(message);
