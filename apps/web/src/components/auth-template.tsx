@@ -48,6 +48,10 @@ export function AuthTemplate(props: AuthTemplateProps) {
         const { error: signUpError } = await supabase.auth.signUp({
           email: email.trim().toLowerCase(),
           password,
+          options: {
+            emailRedirectTo:
+              typeof window !== "undefined" ? `${window.location.origin}/sign-in?next=/` : undefined,
+          },
         });
         if (signUpError) throw signUpError;
       }
