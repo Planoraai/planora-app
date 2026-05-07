@@ -113,9 +113,9 @@ export function AuthTemplate(props: AuthTemplateProps) {
                 </p>
               </div>
             ) : (
-              <div className="absolute bottom-10 left-8 right-8 text-white">
-                <h2 className="max-w-[480px] text-[28px] font-semibold leading-[1.04] xl:text-[34px]">Join the future of travel.</h2>
-                <p className="mt-3 max-w-[520px] text-base leading-snug text-white/90 xl:text-lg">
+              <div className="absolute bottom-9 left-8 right-8 text-white">
+                <h2 className="max-w-[440px] text-[24px] font-semibold leading-[1.06] xl:text-[30px]">Join the future of travel.</h2>
+                <p className="mt-2.5 max-w-[500px] text-[15px] leading-snug text-white/90 xl:text-base">
                   Experience hyper-personalized itineraries powered by AI agents that understand your unique travel
                   soul.
                 </p>
@@ -123,23 +123,23 @@ export function AuthTemplate(props: AuthTemplateProps) {
             )}
           </aside>
 
-          <div className="flex items-center justify-center px-5 py-6 sm:px-7 lg:px-9">
+          <div className={`flex items-center justify-center px-5 sm:px-7 lg:px-9 ${isSignIn ? "py-6" : "py-5"}`}>
             <div className={`w-full ${isSignIn ? "max-w-[460px]" : "max-w-[430px]"}`}>
-              <h1 className={`${isSignIn ? "text-[44px]" : "text-[36px]"} font-semibold leading-tight`}>
+              <h1 className={`${isSignIn ? "text-[44px]" : "text-[32px]"} font-semibold leading-tight`}>
                 {isSignIn ? "Welcome back" : "Create your account"}
               </h1>
-              <p className={`mt-1.5 text-[#606d7a] ${isSignIn ? "text-[18px]" : "text-base"}`}>
+              <p className={`mt-1.5 text-[#606d7a] ${isSignIn ? "text-[18px]" : "text-[15px]"}`}>
                 {isSignIn
                   ? "Enter your details to access your AI-powered itineraries."
                   : "Start your journey with Planora today."}
               </p>
 
-              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <button className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#d9d9d9] text-[15px]">
+              <div className={`grid grid-cols-1 gap-3 sm:grid-cols-2 ${isSignIn ? "mt-5" : "mt-4"}`}>
+                <button className={`flex items-center justify-center gap-2 rounded-xl border border-[#d9d9d9] text-[15px] ${isSignIn ? "h-11" : "h-10.5"}`}>
                   <span className="inline-block h-5 w-5 rounded-full border border-[#111] text-[11px] leading-5">G</span>
                   Google
                 </button>
-                <button className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#d9d9d9] text-[15px]">
+                <button className={`flex items-center justify-center gap-2 rounded-xl border border-[#d9d9d9] text-[15px] ${isSignIn ? "h-11" : "h-10.5"}`}>
                   <span className="text-xl">A</span>
                   Apple
                 </button>
@@ -151,7 +151,7 @@ export function AuthTemplate(props: AuthTemplateProps) {
                 <span className="h-px flex-1 bg-[#e6e6e6]" />
               </div>
 
-              <form className="space-y-4" onSubmit={onSubmit}>
+              <form className={`${isSignIn ? "space-y-4" : "space-y-3.5"}`} onSubmit={onSubmit}>
                 {!isSignIn ? <Field label="Full Name" placeholder="John Doe" /> : null}
                 <Field
                   label={isSignIn ? "EMAIL ADDRESS" : "Email Address"}
@@ -205,7 +205,7 @@ export function AuthTemplate(props: AuthTemplateProps) {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     autoComplete={isSignIn ? "current-password" : "new-password"}
-                    className="h-11 w-full rounded-xl border border-[#dcdcdc] px-4 text-base text-[#6d7278] outline-none"
+                    className={`w-full rounded-xl border border-[#dcdcdc] px-4 text-base text-[#6d7278] outline-none ${isSignIn ? "h-11" : "h-10.5"}`}
                   />
                   {!isSignIn ? (
                     <p className="mt-1 text-xs text-[#667085]">
@@ -227,7 +227,7 @@ export function AuthTemplate(props: AuthTemplateProps) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="mt-1 h-11 w-full rounded-xl bg-[#02173d] text-lg font-semibold text-white shadow-[0_7px_16px_rgba(2,23,61,0.2)]"
+                  className={`mt-1 w-full rounded-xl bg-[#02173d] font-semibold text-white shadow-[0_7px_16px_rgba(2,23,61,0.2)] ${isSignIn ? "h-11 text-lg" : "h-10.5 text-base"}`}
                 >
                   {isSubmitting ? "Please wait..." : isSignIn ? "Sign In  ->" : "Create Account"}
                 </button>
